@@ -1,0 +1,16 @@
+@keyframes fade-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.trade-card {
+  opacity: 0;
+  animation: fade-slide-up 240ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: calc(var(--stagger-idx, 0) * 40ms);
+}

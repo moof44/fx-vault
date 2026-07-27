@@ -1,0 +1,205 @@
+@if (isOpen()) {
+  <!-- Modal Backdrop Overlay -->
+  <div
+    class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex p-0 sm:p-4 overflow-y-auto transition-gpu animate-fade-in"
+    (click)="onCancel()"
+    (keyup.escape)="onCancel()"
+    tabindex="0"
+    role="button"
+    aria-label="Close modal backdrop"
+  >
+    <!-- Modal Card (Mobile: Bottom Sheet, Desktop: Centered Floating Card) -->
+    <div
+      class="modal-card bg-slate-900 text-slate-100 border border-slate-800 shadow-2xl w-full mt-auto sm:mt-auto sm:mb-auto sm:m-auto sm:max-w-md rounded-t-2xl sm:rounded-2xl p-6 relative transition-gpu"
+      (click)="$event.stopPropagation()"
+      (keydown)="$event.stopPropagation()"
+      tabindex="-1"
+    >
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-6">
+        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+          <span class="w-2 h-6 bg-indigo-500 rounded-full"></span>
+          {{ tradeToEdit() ? formDict.editTitle : formDict.title }}
+        </h2>
+        <button
+          type="button"
+          (click)="onCancel()"
+          class="w-10 h-10 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors border border-slate-700/50 cursor-pointer"
+          aria-label="Close modal"
+        >
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Trade Form -->
+      <form [formGroup]="form" (ngSubmit)="submitTrade()" class="space-y-5">
+        <!-- Currency Pair Input -->
+        <div>
+          <label for="pair" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+            {{ formDict.labels.pair }}
+          </label>
+          <input
+            id="pair"
+            type="text"
+            formControlName="pair"
+            [placeholder]="formDict.placeholders.pair"
+            class="w-full min-h-[48px] px-4 rounded-xl bg-slate-800/80 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/80 focus:border-indigo-500 font-mono tracking-wider uppercase transition-all"
+          />
+          @if (form.controls.pair.touched && form.controls.pair.invalid) {
+            <p class="text-xs text-rose-400 mt-1">Please enter a valid currency pair (e.g., EURUSD).</p>
+          }
+        </div>
+
+        <!-- Order Type (BUY / SELL Segmented Switch) -->
+        <div>
+          <span class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+            {{ formDict.labels.type }}
+          </span>
+          <div class="grid grid-cols-2 gap-3 p-1 bg-slate-800/80 rounded-xl border border-slate-700">
+            <button
+              type="button"
+              (click)="form.controls.type.setValue('BUY')"
+              [class.bg-emerald-600]="form.controls.type.value === 'BUY'"
+              [class.text-white]="form.controls.type.value === 'BUY'"
+              [class.shadow-md]="form.controls.type.value === 'BUY'"
+              [class.text-slate-400]="form.controls.type.value !== 'BUY'"
+              class="min-h-[44px] rounded-lg font-bold text-sm tracking-wider uppercase transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+              </svg>
+              BUY
+            </button>
+
+            <button
+              type="button"
+              (click)="form.controls.type.setValue('SELL')"
+              [class.bg-rose-600]="form.controls.type.value === 'SELL'"
+              [class.text-white]="form.controls.type.value === 'SELL'"
+              [class.shadow-md]="form.controls.type.value === 'SELL'"
+              [class.text-slate-400]="form.controls.type.value !== 'SELL'"
+              class="min-h-[44px] rounded-lg font-bold text-sm tracking-wider uppercase transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </svg>
+              SELL
+            </button>
+          </div>
+        </div>
+
+        <!-- Lot Size & Open Price Row -->
+        <div class="grid grid-cols-2 gap-4">
+          <!-- Lot Size -->
+          <div>
+            <label for="lotSize" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+              {{ formDict.labels.lotSize }}
+            </label>
+            <input
+              id="lotSize"
+              type="number"
+              step="0.01"
+              formControlName="lotSize"
+              [placeholder]="formDict.placeholders.lotSize"
+              class="w-full min-h-[48px] px-4 rounded-xl bg-slate-800/80 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/80 focus:border-indigo-500 font-mono transition-all"
+            />
+            @if (form.controls.lotSize.touched && form.controls.lotSize.invalid) {
+              <p class="text-[11px] text-rose-400 mt-1">Min 0.01</p>
+            }
+          </div>
+
+          <!-- Open Price -->
+          <div>
+            <label for="openPrice" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+              {{ formDict.labels.openPrice }}
+            </label>
+            <input
+              id="openPrice"
+              type="number"
+              step="0.0001"
+              formControlName="openPrice"
+              [placeholder]="formDict.placeholders.openPrice"
+              class="w-full min-h-[48px] px-4 rounded-xl bg-slate-800/80 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/80 focus:border-indigo-500 font-mono transition-all"
+            />
+            @if (form.controls.openPrice.touched && form.controls.openPrice.invalid) {
+              <p class="text-[11px] text-rose-400 mt-1">Required</p>
+            }
+          </div>
+        </div>
+
+        <!-- Close Price & Profit Row -->
+        <div class="grid grid-cols-2 gap-4">
+          <!-- Close Price -->
+          <div>
+            <label for="closePrice" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+              {{ formDict.labels.closePrice }}
+            </label>
+            <input
+              id="closePrice"
+              type="number"
+              step="0.0001"
+              formControlName="closePrice"
+              [placeholder]="formDict.placeholders.closePrice"
+              class="w-full min-h-[48px] px-4 rounded-xl bg-slate-800/80 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/80 focus:border-indigo-500 font-mono transition-all"
+            />
+          </div>
+
+          <!-- Profit / Loss -->
+          <div>
+            <label for="profit" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+              {{ formDict.labels.profit }}
+            </label>
+            <input
+              id="profit"
+              type="number"
+              step="0.01"
+              formControlName="profit"
+              [placeholder]="formDict.placeholders.profit"
+              class="w-full min-h-[48px] px-4 rounded-xl bg-slate-800/80 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/80 focus:border-indigo-500 font-mono transition-all"
+            />
+          </div>
+        </div>
+
+        <!-- Strategy Selection Dropdown -->
+        <div>
+          <label for="strategy" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+            {{ formDict.labels.strategy }}
+          </label>
+          <select
+            id="strategy"
+            formControlName="strategy"
+            class="w-full min-h-[48px] px-4 rounded-xl bg-slate-800/80 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/80 focus:border-indigo-500 transition-all cursor-pointer"
+          >
+            @for (strat of formDict.strategies; track strat) {
+              <option [value]="strat">{{ strat }}</option>
+            }
+          </select>
+        </div>
+
+        <!-- Action Buttons Footer -->
+        <div class="pt-4 border-t border-slate-800 grid grid-cols-2 gap-3">
+          <button
+            type="button"
+            (click)="onCancel()"
+            class="w-full min-h-[48px] px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold text-sm transition-all border border-slate-700/60 cursor-pointer"
+          >
+            {{ formDict.buttons.cancel }}
+          </button>
+
+          <button
+            type="submit"
+            [disabled]="form.invalid"
+            class="w-full min-h-[48px] px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm shadow-lg shadow-indigo-600/30 transition-all border border-indigo-500/50 flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            {{ tradeToEdit() ? formDict.buttons.update : formDict.buttons.submit }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

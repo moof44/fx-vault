@@ -1,0 +1,127 @@
+<div class="space-y-3">
+  <!-- Section Header -->
+  <div class="flex items-center justify-between px-1 mb-2">
+    <h2 class="text-lg font-bold text-white tracking-wide">
+      {{ dict.headers.tradesOverview }}
+    </h2>
+    <span class="text-xs text-slate-400 font-medium">
+      {{ store.filteredTrades().length }} Recorded
+    </span>
+  </div>
+
+  <!-- Desktop Table Header (visible md+) -->
+  <div class="hidden md:grid md:grid-cols-7 gap-4 px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-slate-400 border-b border-slate-800">
+    <div class="col-span-1">{{ dict.labels.pair }}</div>
+    <div class="col-span-1">{{ dict.labels.type }}</div>
+    <div class="col-span-1 text-right">{{ dict.labels.lotSize }}</div>
+    <div class="col-span-1 text-right">{{ dict.labels.openPrice }}</div>
+    <div class="col-span-1">{{ dict.labels.strategy }}</div>
+    <div class="col-span-1 text-right">{{ dict.labels.profit }}</div>
+    <div class="col-span-1 text-right">{{ dict.labels.status }}</div>
+  </div>
+
+  <!-- Trade List Rows / Mobile Cards -->
+  @for (trade of store.filteredTrades(); track trade.id; let idx = $index) {
+    <div
+      (click)="editTrade.emit(trade)"
+      (keyup.enter)="editTrade.emit(trade)"
+      tabindex="0"
+      role="button"
+      [attr.aria-label]="'Edit trade ' + trade.pair"
+      class="trade-row min-h-[48px] bg-slate-800/80 backdrop-blur-sm rounded-2xl md:rounded-xl p-4 md:px-5 md:py-3 border border-slate-700/60 shadow-md transition-gpu duration-200 ease-out hover:-translate-y-0.5 hover:shadow-lg hover:border-indigo-500/50 cursor-pointer active:scale-[0.99] flex flex-col md:grid md:grid-cols-7 gap-3 md:gap-4 md:items-center"
+      [style.--stagger-idx]="idx"
+    >
+      <!-- Pair & Type Segment -->
+      <div class="col-span-1 flex items-center justify-between md:justify-start gap-2">
+        <div class="flex items-center gap-2">
+          <span class="text-base md:text-sm font-bold text-white font-mono tracking-wider">
+            {{ trade.pair }}
+          </span>
+          <span
+            class="px-2 py-0.5 text-[11px] font-bold rounded-md uppercase border"
+            [class.bg-emerald-500\/10]="trade.type === 'BUY'"
+            [class.text-emerald-400]="trade.type === 'BUY'"
+            [class.border-emerald-500\/20]="trade.type === 'BUY'"
+            [class.bg-rose-500\/10]="trade.type === 'SELL'"
+            [class.text-rose-400]="trade.type === 'SELL'"
+            [class.border-rose-500\/20]="trade.type === 'SELL'"
+          >
+            {{ trade.type }}
+          </span>
+        </div>
+
+        <!-- Sync Status (Mobile only header badge) -->
+        <span
+          class="md:hidden px-2 py-0.5 text-[10px] font-medium rounded-full border"
+          [class.bg-slate-700\/50]="trade.syncStatus === 'LOCAL'"
+          [class.text-slate-300]="trade.syncStatus === 'LOCAL'"
+          [class.border-slate-600]="trade.syncStatus === 'LOCAL'"
+          [class.bg-amber-500\/10]="trade.syncStatus === 'SYNCING'"
+          [class.text-amber-400]="trade.syncStatus === 'SYNCING'"
+          [class.border-amber-500\/20]="trade.syncStatus === 'SYNCING'"
+          [class.bg-indigo-500\/10]="trade.syncStatus === 'SYNCED'"
+          [class.text-indigo-400]="trade.syncStatus === 'SYNCED'"
+          [class.border-indigo-500\/20]="trade.syncStatus === 'SYNCED'"
+        >
+          {{ trade.syncStatus }}
+        </span>
+      </div>
+
+      <!-- Type Column for Desktop -->
+      <div class="hidden md:block col-span-1 text-xs text-slate-300 font-medium">
+        {{ trade.openDate | date:'shortDate' }}
+      </div>
+
+      <!-- Lot Size -->
+      <div class="col-span-1 flex justify-between md:justify-end items-center text-xs">
+        <span class="text-slate-400 md:hidden">{{ dict.labels.lotSize }}</span>
+        <span class="font-mono font-medium text-slate-200">{{ trade.lotSize }}</span>
+      </div>
+
+      <!-- Open Price -->
+      <div class="col-span-1 flex justify-between md:justify-end items-center text-xs">
+        <span class="text-slate-400 md:hidden">{{ dict.labels.openPrice }}</span>
+        <span class="font-mono font-medium text-slate-200">{{ trade.openPrice }}</span>
+      </div>
+
+      <!-- Strategy -->
+      <div class="col-span-1 flex justify-between md:justify-start items-center text-xs">
+        <span class="text-slate-400 md:hidden">{{ dict.labels.strategy }}</span>
+        <span class="font-medium text-slate-300 bg-slate-700/50 px-2 py-0.5 rounded border border-slate-600/50">
+          {{ trade.strategy }}
+        </span>
+      </div>
+
+      <!-- Profit / Loss -->
+      <div class="col-span-1 flex justify-between md:justify-end items-center border-t border-slate-700/50 pt-2 mt-1 md:border-t-0 md:pt-0 md:mt-0">
+        <span class="text-xs text-slate-400 md:hidden">{{ dict.labels.profit }}</span>
+        <span
+          class="text-base md:text-sm font-bold font-mono"
+          [class.text-emerald-400]="trade.profit > 0"
+          [class.text-rose-400]="trade.profit < 0"
+          [class.text-slate-300]="trade.profit === 0"
+        >
+          {{ trade.profit | currency:'USD':'symbol':'1.2-2' }}
+        </span>
+      </div>
+
+      <!-- Sync Status (Desktop column) -->
+      <div class="hidden md:flex col-span-1 justify-end items-center">
+        <span
+          class="px-2 py-0.5 text-[10px] font-medium rounded-full border"
+          [class.bg-slate-700\/50]="trade.syncStatus === 'LOCAL'"
+          [class.text-slate-300]="trade.syncStatus === 'LOCAL'"
+          [class.border-slate-600]="trade.syncStatus === 'LOCAL'"
+          [class.bg-amber-500\/10]="trade.syncStatus === 'SYNCING'"
+          [class.text-amber-400]="trade.syncStatus === 'SYNCING'"
+          [class.border-amber-500\/20]="trade.syncStatus === 'SYNCING'"
+          [class.bg-indigo-500\/10]="trade.syncStatus === 'SYNCED'"
+          [class.text-indigo-400]="trade.syncStatus === 'SYNCED'"
+          [class.border-indigo-500\/20]="trade.syncStatus === 'SYNCED'"
+        >
+          {{ trade.syncStatus }}
+        </span>
+      </div>
+    </div>
+  }
+</div>

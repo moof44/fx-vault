@@ -1,13 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NxWelcome } from './nx-welcome';
+import { FirebaseSyncService } from './core/sync/firebase-sync.service';
 
 @Component({
-  imports: [NxWelcome, RouterModule],
+  imports: [RouterModule],
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
+  // Inject FirebaseSyncService so background sync initializes immediately on boot
+  private readonly syncService = inject(FirebaseSyncService);
   protected title = 'fx-vault';
 }

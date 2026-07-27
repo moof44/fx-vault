@@ -1,0 +1,21 @@
+<div class="equity-curve-wrapper bg-slate-900 rounded-2xl p-4 sm:p-6 shadow-md border border-slate-800 mb-8 transition-gpu">
+  <!-- Chart Header -->
+  <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-800">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-lg bg-sky-500/10 border border-sky-500/20 text-sky-400 flex items-center justify-center">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+        </svg>
+      </div>
+      <h2 class="text-lg font-bold text-white tracking-wide">
+        {{ dict.charts.equityTitle }}
+      </h2>
+    </div>
+    <span class="text-xs text-slate-400 font-mono">
+      Cumulative PnL ($)
+    </span>
+  </div>
+
+  <!-- Lightweight Charts Container -->
+  <div #chartContainer class="h-[300px] w-full"></div>
+</div>

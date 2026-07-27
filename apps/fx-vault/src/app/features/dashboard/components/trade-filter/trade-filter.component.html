@@ -1,0 +1,46 @@
+<div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-6 bg-slate-800/40 p-4 rounded-2xl border border-slate-800/80 backdrop-blur-sm">
+  <div class="flex items-center gap-2 text-slate-300 font-semibold text-xs uppercase tracking-wider">
+    <svg class="w-4 h-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+    </svg>
+    <span>Filter Journal</span>
+  </div>
+
+  <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+    <!-- Strategy Filter Dropdown -->
+    <div class="flex items-center gap-2">
+      <label for="filterStrategy" class="text-xs text-slate-400 shrink-0 font-medium hidden sm:inline">
+        {{ filtersDict.strategyLabel }}:
+      </label>
+      <select
+        id="filterStrategy"
+        [value]="store.filterStrategy()"
+        (change)="onStrategyChange($event)"
+        class="filter-select w-full sm:w-44 min-h-[48px] px-3.5 rounded-xl bg-slate-900 border border-slate-700/80 text-white text-xs font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/80 focus:border-indigo-500 transition-all cursor-pointer"
+      >
+        <option value="All">{{ filtersDict.allOption }} {{ filtersDict.strategyLabel }}s</option>
+        @for (strat of store.availableStrategies(); track strat) {
+          <option [value]="strat">{{ strat }}</option>
+        }
+      </select>
+    </div>
+
+    <!-- Currency Pair Filter Dropdown -->
+    <div class="flex items-center gap-2">
+      <label for="filterPair" class="text-xs text-slate-400 shrink-0 font-medium hidden sm:inline">
+        {{ filtersDict.pairLabel }}:
+      </label>
+      <select
+        id="filterPair"
+        [value]="store.filterPair()"
+        (change)="onPairChange($event)"
+        class="filter-select w-full sm:w-44 min-h-[48px] px-3.5 rounded-xl bg-slate-900 border border-slate-700/80 text-white text-xs font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/80 focus:border-indigo-500 transition-all cursor-pointer font-mono"
+      >
+        <option value="All">{{ filtersDict.allOption }} Pairs</option>
+        @for (pair of store.availablePairs(); track pair) {
+          <option [value]="pair">{{ pair }}</option>
+        }
+      </select>
+    </div>
+  </div>
+</div>
