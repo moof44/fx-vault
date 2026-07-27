@@ -1,0 +1,44 @@
+- [x] Step 1: Workspace Initialization
+  - [x] Run Nx workspace creation command
+  - [x] Document top-level directory structure and CLI command used
+- [x] Step 2: Install Core Dependencies
+  - [x] Install Dexie, NgRx Signals, Firebase, and @angular/fire
+  - [x] Configure Tailwind CSS
+  - [x] Output updated package.json dependencies block
+- [x] Step 3: Local Database Design (Dexie)
+  - [x] Create trade-record.model.ts
+  - [x] Create fx-vault.db.ts
+- [x] Step 4: State Management (NgRx Signals)
+  - [x] Make FxVaultDB injectable
+  - [x] Create trade.store.ts
+- [x] Step 5: UI Presentation Layer & Content Dictionary
+  - [x] Create trade-ui.dict.ts
+  - [x] Create dashboard component (ts, html, scss)
+- [x] Step 6: Cloud Sync Worker & App Router
+  - [x] Create firebase-sync.service.ts
+  - [x] Update app.routes.ts
+  - [x] Clean up app.ts & app.html
+- [x] Step 7: "Log Trade" Form Modal & Dashboard Integration
+  - [x] Update trade-ui.dict.ts with logTradeForm
+  - [x] Create log-trade component (ts, html, scss)
+  - [x] Integrate modal into dashboard (ts, html)
+- [x] Step 8: Summary Metric Cards & Responsive Trade List
+  - [x] Create summary-cards component (ts, html, scss)
+  - [x] Create trade-list component (ts, html, scss)
+  - [x] Integrate into dashboard (ts, html)
+- [x] Step 9: Reactive Filtering & Tagging Engine
+  - [x] Update trade-ui.dict.ts with filters
+  - [x] Extend TradeStore with computed signals and filter methods
+  - [x] Update summary-cards and trade-list components to consume filteredTrades
+  - [x] Create trade-filter component (ts, html, scss)
+  - [x] Integrate filter bar into dashboard (ts, html)
+- [x] Step 10: Edit / Close Trade CRUD Lifecycle
+  - [x] Update trade-ui.dict.ts with editTitle and updateButton
+  - [x] Refactor LogTradeComponent for dual creation/edit modes (ts, html)
+  - [x] Update TradeListComponent to emit editTrade selection (ts, html)
+  - [x] Integrate edit modal flow in DashboardComponent (ts, html)
+- [x] Step 11: Interactive Equity Curve Chart Component
+  - [x] Install lightweight-charts dependency
+  - [x] Update trade-ui.dict.ts with charts dictionary
+  - [x] Create EquityCurveComponent with lightweight-charts (ts, html, scss)
+  - [x] Integrate EquityCurveComponent into Dashboard layout (ts, html)
