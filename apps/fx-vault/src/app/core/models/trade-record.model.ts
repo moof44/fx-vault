@@ -15,4 +15,5 @@ export interface TradeRecord {
   profit: number; // PnL in account currency
   strategy: string; // e.g., 'Manual', 'Grid-EA', 'Martingale'
   syncStatus: SyncStatus;
+  updatedAt?: number; // Unix timestamp for conflict resolution
 }

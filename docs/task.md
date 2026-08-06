@@ -42,3 +42,10 @@
   - [x] Update trade-ui.dict.ts with charts dictionary
   - [x] Create EquityCurveComponent with lightweight-charts (ts, html, scss)
   - [x] Integrate EquityCurveComponent into Dashboard layout (ts, html)
+- [x] Step 12: Multi-Device Real-Time Sync & UI Event Stream
+  - [x] Add remoteChange$ Subject to FirebaseSyncService
+  - [x] Connect TradeStore to remoteChange$ stream for auto UI refresh
+- [x] Step 13: Timestamp Versioning & Conflict Resolution
+  - [x] Add updatedAt field to TradeRecord model
+  - [x] Implement timestamp comparison logic in sync engine and store
+

@@ -47,3 +47,13 @@ Thumbs.db
 .angular
 
 __screenshots__/
+
+# Environment and Secret Files
+.env
+*.env
+.env.local
+.env.*.local
+mcp-config.json
+github-mcp-server/.env
+github-mcp-server/mcp-config.json
+

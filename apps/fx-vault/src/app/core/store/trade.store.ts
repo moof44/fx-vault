@@ -87,10 +87,12 @@ export const TradeStore = signalStore(
         patchState(store, { isLoading: true, error: null });
         try {
           const id = crypto.randomUUID();
+          const now = Date.now();
           const newTrade: TradeRecord = {
             ...trade,
             id,
             syncStatus: 'LOCAL',
+            updatedAt: now,
           };
           await db.trades.add(newTrade);
           // Reload trades to update local state
@@ -114,7 +116,8 @@ export const TradeStore = signalStore(
 
         patchState(store, { isLoading: true, error: null });
         try {
-          await db.trades.update(id, { ...changes, syncStatus: 'LOCAL' });
+          const now = Date.now();
+          await db.trades.update(id, { ...changes, syncStatus: 'LOCAL', updatedAt: now });
           const trades = await db.trades.orderBy('openDate').reverse().toArray();
           patchState(store, { trades, isLoading: false });
           syncService.syncPendingTrades();
@@ -151,6 +154,10 @@ export const TradeStore = signalStore(
   withHooks({
     onInit(store) {
       store.loadTrades();
+      const syncService = inject(FirebaseSyncService);
+      syncService.remoteChange$.subscribe(() => {
+        store.loadTrades();
+      });
     },
   })
 );

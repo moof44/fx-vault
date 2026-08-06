@@ -20,6 +20,14 @@ To create a production bundle:
 npx nx build fx-vault
 ```
 
+## Documentation & Workflow
+
+All architecture details, task progress, and feature evolutions are maintained in [`docs/`](file:///home/jirehpadua/fx-vault/docs):
+- **[`Workflow & Policy`](file:///home/jirehpadua/fx-vault/docs/workflow.md)**: Mandatory "Doc-Sync" guidelines for major changes.
+- **[`AI Learnings & Pitfalls Log`](file:///home/jirehpadua/fx-vault/docs/ai_learnings.md)**: Continuous log of mistakes, command fixes, and edge cases to avoid repeating bugs.
+- **[`Architecture Walkthrough`](file:///home/jirehpadua/fx-vault/docs/walkthrough.md)**: Chronological breakdown of features and code structure.
+- **[`Task Checklist`](file:///home/jirehpadua/fx-vault/docs/task.md)**: Live status tracking of completed application capabilities.
+
 To see all available targets to run for a project, run:
 
 ```sh
