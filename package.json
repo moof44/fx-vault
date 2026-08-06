@@ -2,7 +2,12 @@
   "name": "@fx-vault/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "dev": "NX_DAEMON=false PORT=3000 npx nx serve fx-vault",
+    "build": "npx nx build fx-vault",
+    "start": "node dist/apps/fx-vault/server/server.mjs",
+    "lint": "npx nx lint fx-vault"
+  },
   "private": true,
   "dependencies": {
     "@angular-devkit/build-angular": "~22.0.4",

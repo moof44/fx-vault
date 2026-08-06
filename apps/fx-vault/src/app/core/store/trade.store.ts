@@ -3,6 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { signalStore, withState, withComputed, withMethods, withHooks, patchState } from '@ngrx/signals';
 import { FxVaultDB } from '../database/fx-vault.db';
 import { TradeRecord } from '../models/trade-record.model';
+import { FirebaseSyncService } from '../sync/firebase-sync.service';
 
 export interface TradeState {
   trades: TradeRecord[];
@@ -49,6 +50,7 @@ export const TradeStore = signalStore(
   withMethods((store) => {
     const db = inject(FxVaultDB);
     const platformId = inject(PLATFORM_ID);
+    const syncService = inject(FirebaseSyncService);
 
     return {
       setStrategyFilter(strategy: string) {
@@ -91,9 +93,11 @@ export const TradeStore = signalStore(
             syncStatus: 'LOCAL',
           };
           await db.trades.add(newTrade);
-          // Reload trades to update the state
+          // Reload trades to update local state
           const trades = await db.trades.orderBy('openDate').reverse().toArray();
           patchState(store, { trades, isLoading: false });
+          // Trigger Firestore sync
+          syncService.syncPendingTrades();
         } catch (err: unknown) {
           const message = err instanceof Error ? err.message : 'FAILED_TO_ADD_TRADE';
           patchState(store, {
@@ -110,10 +114,10 @@ export const TradeStore = signalStore(
 
         patchState(store, { isLoading: true, error: null });
         try {
-          await db.trades.update(id, changes);
-          // Reload trades to update the state
+          await db.trades.update(id, { ...changes, syncStatus: 'LOCAL' });
           const trades = await db.trades.orderBy('openDate').reverse().toArray();
           patchState(store, { trades, isLoading: false });
+          syncService.syncPendingTrades();
         } catch (err: unknown) {
           const message = err instanceof Error ? err.message : 'FAILED_TO_UPDATE_TRADE';
           patchState(store, {
@@ -131,9 +135,9 @@ export const TradeStore = signalStore(
         patchState(store, { isLoading: true, error: null });
         try {
           await db.trades.delete(id);
-          // Reload trades to update the state
           const trades = await db.trades.orderBy('openDate').reverse().toArray();
           patchState(store, { trades, isLoading: false });
+          syncService.deleteTradeFromCloud(id);
         } catch (err: unknown) {
           const message = err instanceof Error ? err.message : 'FAILED_TO_DELETE_TRADE';
           patchState(store, {
@@ -150,3 +154,4 @@ export const TradeStore = signalStore(
     },
   })
 );
+

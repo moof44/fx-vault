@@ -1,0 +1,6 @@
+{
+  "name": "FX Vault",
+  "description": "Forex trading journal, performance analytics, and strategy vault application",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

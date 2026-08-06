@@ -1,6 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TradeStore } from '../../core/store/trade.store';
+import { FirebaseSyncService } from '../../core/sync/firebase-sync.service';
 import { TRADE_UI_DICT, ErrorDictMessage } from '../../core/content/trade-ui.dict';
 import { TradeRecord } from '../../core/models/trade-record.model';
 import { LogTradeComponent } from './components/log-trade/log-trade.component';
@@ -28,6 +29,7 @@ import { EquityCurveComponent } from './components/equity-curve/equity-curve.com
 })
 export class DashboardComponent {
   readonly store = inject(TradeStore);
+  readonly syncService = inject(FirebaseSyncService);
   readonly dict = TRADE_UI_DICT;
   readonly isLogTradeModalOpen = signal(false);
   readonly selectedTrade = signal<TradeRecord | null>(null);
@@ -52,4 +54,9 @@ export class DashboardComponent {
     this.isLogTradeModalOpen.set(false);
     this.selectedTrade.set(null);
   }
+
+  triggerManualSync(): void {
+    this.syncService.triggerSync();
+  }
 }
+

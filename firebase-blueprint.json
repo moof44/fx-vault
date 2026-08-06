@@ -1,0 +1,27 @@
+{
+  "entities": {
+    "trades": {
+      "title": "Trades",
+      "description": "Forex trade journal records",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "ticketId": { "type": "string" },
+        "magicNumber": { "type": "number" },
+        "pair": { "type": "string" },
+        "type": { "type": "string", "enum": ["BUY", "SELL"] },
+        "lotSize": { "type": "number" },
+        "openPrice": { "type": "number" },
+        "closePrice": { "type": "number" },
+        "openDate": { "type": "number" },
+        "closeDate": { "type": "number" },
+        "profit": { "type": "number" },
+        "strategy": { "type": "string" },
+        "syncStatus": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["pair", "type", "lotSize", "openPrice", "openDate", "profit", "strategy"]
+    }
+  }
+}
